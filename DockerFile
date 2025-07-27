@@ -1,0 +1,39 @@
+# Use a lightweight OpenJDK base image
+FROM openjdk:11-jdk-slim
+
+# Set environment variables for JMeter version and download URL
+ARG JMETER_VERSION=5.6.3
+ARG JMETER_DOWNLOAD_URL=https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-${JMETER_VERSION}.zip
+ARG JMETER_HOME=/opt/apache-jmeter-${JMETER_VERSION}
+
+# Install necessary packages (unzip, wget) and download/install JMeter
+RUN apt-get update && \
+    apt-get install -y unzip wget && \
+    wget -q ${JMETER_DOWNLOAD_URL} -O /tmp/apache-jmeter-${JMETER_VERSION}.zip && \
+    unzip -q /tmp/apache-jmeter-${JMETER_VERSION}.zip -d /opt && \
+    rm /tmp/apache-jmeter-${JMETER_VERSION}.zip && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Add JMeter to the PATH
+ENV PATH=${JMETER_HOME}/bin:$PATH
+
+# Create a working directory for your test files inside the container
+WORKDIR /app
+
+# Copy your JMeter test plan and the sample front-page.html into the container
+# Ensure these files are in the same directory as your Dockerfile when building
+COPY front_page_load_test.jmx .
+COPY front-page.html . # Copying the front-page.html here for completeness, though JMeter hits a URL
+
+# Expose ports if JMeter needs to communicate outwards or for distributed testing,
+# though not strictly necessary for a simple test hitting an external HTTP server.
+# EXPOSE 8080 # Example for a JMeter dashboard or listener
+
+# Define the default command to run the JMeter test in non-GUI mode
+# You'll typically override this when you run the container
+# To run this, you need to ensure the target web server (e.g., your Python http.server)
+# is accessible from within the Docker container's network.
+# If your server is on 'localhost', you might need to use `host.docker.internal`
+# or the actual IP address of your host machine from the container's perspective.
+CMD ["jmeter", "-n", "-t", "front_page_load_test.jmx", "-l", "test_results.jtl", "-e", "-o", "dashboard"]
