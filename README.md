@@ -20,10 +20,15 @@ HTML/CSS/JavaScript: For the sample front page being tested. (You can integrate 
 Git/GitHub: For version control and project hosting.
 
  Project Structure
+ 
 .
+
 ├── README.md
+
 ├── front-page.html
+
 ├── jmeter-test-plan.jmx.md
+
 └── .gitignore
 
  Getting Started
