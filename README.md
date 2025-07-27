@@ -18,7 +18,7 @@ Java Development Kit (JDK) 11 or higher: This is essential to compile and run th
 Python 3.x: We'll use Python's built-in HTTP server to easily serve front-page.html locally for testing.
 
 
-Licensed by Google
+
 Setup and Running the Project
 Follow these steps to get your performance test configured and running:
 
@@ -153,10 +153,3 @@ Containerization of the Full Stack: Develop a docker-compose.yml file that orche
 
 Performance Dashboard Integration: Integrate your collected performance metrics with a dedicated visualization tool like Grafana. You could use a time-series database like Prometheus or InfluxDB to store your TrafficSimulator's output, allowing you to create dynamic, interactive dashboards for real-time monitoring and post-test analysis.
 
-
-Licensed by Google
-CI/CD Pipeline Integration: Demonstrate how this performance test can be integrated into a Continuous Integration/Continuous Delivery (CI/CD) pipeline. This would involve configuring your CI system (e.g., GitHub Actions, Jenkins) to automatically run the TrafficSimulator after every code commit or before deploying new versions. This highlights the practical application of performance testing in a modern development workflow.
-
-Performance Baselines and Trend Analysis: Store historical test results (e.g., in a simple database or JSON files) and implement logic to compare the results of current test runs against a predefined performance baseline. This allows you to automatically identify and alert on performance regressions over time.
-
-This project now serves as a robust foundation to demonstrate your proficiency in performance testing, combining programmatic control with advanced scenario simulation and detailed metric analysis. Good luck!
