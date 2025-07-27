@@ -3,35 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Front Page for Load Testing</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Advanced Frontend Performance Test Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f3f4f6;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
             min-height: 100vh;
-            margin: 0;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        /* Custom styles for demonstration of load */
+        .slow-image {
+            width: 100%;
+            height: 200px; /* Fixed height for visual consistency */
+            background-color: #e2e8f0; /* Placeholder color */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            object-fit: cover; /* Ensures image covers area */
+            transition: opacity 0.3s ease-in-out;
+            opacity: 1; /* Default opacity */
+        }
+        .slow-image.loading {
+            opacity: 0.5;
+        }
+        .footer-text {
+            color: #6b7280;
+            font-size: 0.875rem;
         }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
-    <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full text-center">
-        <h1 class="text-4xl font-bold text-gray-800 mb-4">Welcome to Our Page!</h1>
-        <p class="text-gray-600 mb-6">
-            This is a simple front page designed for load testing.
-            Its purpose is to serve as a target for performance measurements using tools like Apache JMeter.
-            We appreciate your visit!
-        </p>
-        <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
-            Learn More
-        </button>
-        <div class="mt-8 text-sm text-gray-500">
-            <p>&copy; 2025 Load Test Project. All rights reserved.</p>
+<body class="flex flex-col min-h-screen items-center py-8">
+
+    <header class="w-full bg-blue-600 text-white py-4 shadow-lg mb-8">
+        <div class="container flex justify-between items-center">
+            <h1 class="text-3xl font-bold rounded-lg px-3 py-1 bg-blue-700">PerfTest App</h1>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li><a href="#" class="hover:text-blue-200 transition-colors duration-200">Home</a></li>
+                    <li><a href="#" class="hover:text-blue-200 transition-colors duration-200">Products</a></li>
+                    <li><a href="#" class="hover:text-blue-200 transition-colors duration-200">About</a></li>
+                    <li><a href="#" class="hover:text-blue-200 transition-colors duration-200">Contact</a></li>
+                </ul>
+            </nav>
         </div>
-    </div>
+    </header>
+
+    <main class="flex-grow container">
+        <!-- Hero Section -->
+        <section class="card text-center mb-8">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Welcome to Our Performance Test Showcase!</h2>
+            <p class="text-lg text-gray-600">
+                This page simulates a dynamic frontend experience to serve as a target for load testing.
+                Explore interactive elements and content sections.
+            </p>
+            <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg mt-6 transition-colors duration-200 shadow-md">
+                Learn More
+            </button>
+        </section>
+
+        <!-- Login/Auth Section -->
+        <section class="card mb-8">
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">User Authentication</h3>
+            <p class="text-gray-600 mb-4">
+                Simulate a login interaction. The Java TrafficSimulator can send POST requests to `/api/login`.
+                This form below is for visual representation in the browser.
+            </p>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username:</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username"
+                           class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-400" required>
+                </div>
+                <div>
+                    <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+                    <input type="password" id="password" name="password" placeholder="********"
+                           class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-blue-400" required>
+                </div>
+                <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 shadow-md">
+                    Login
+                </button>
+                <div id="loginMessage" class="mt-2 text-sm text-red-600"></div>
+            </form>
+        </section>
+
+        <!-- Dynamic Content / Product Listing Section -->
+        <section class="card mb-8">
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Our Products</h3>
+            <p class="text-gray-600 mb-4">
+                This section would typically load product data dynamically via API calls (e.g., to `/api/products`).
+                Below are placeholder items.
+            </p>
+            <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Placeholder Product Cards -->
+                <div class="bg-white rounded-xl shadow-lg p-4">
+                    <img src="https://placehold.co/300x200/cccccc/333333?text=Product+1" alt="Product 1" class="w-full h-32 object-cover rounded-md mb-3">
+                    <h4 class="font-semibold text-lg text-gray-900">Awesome Gadget X</h4>
+                    <p class="text-gray-600 text-sm mb-2">A cutting-edge device for your daily needs.</p>
+                    <span class="text-blue-600 font-bold">$199.99</span>
+                    <button class="block w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-lg mt-3 transition-colors duration-200">Add to Cart</button>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-4">
+                    <img src="https://placehold.co/300x200/cccccc/333333?text=Product+2" alt="Product 2" class="w-full h-32 object-cover rounded-md mb-3">
+                    <h4 class="font-semibold text-lg text-gray-900">Super Widget Pro</h4>
+                    <p class="text-gray-600 text-sm mb-2">Enhance your productivity with this gadget.</p>
+                    <span class="text-blue-600 font-bold">$79.99</span>
+                    <button class="block w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-lg mt-3 transition-colors duration-200">Add to Cart</button>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-4">
+                    <img src="https://placehold.co/300x200/cccccc/333333?text=Product+3" alt="Product 3" class="w-full h-32 object-cover rounded-md mb-3">
+                    <h4 class="font-semibold text-lg text-gray-900">Mega Device Z</h4>
+                    <p class="text-gray-600 text-sm mb-2">The ultimate solution for your entertainment.</p>
+                    <span class="text-blue-600 font-bold">$349.00</span>
+                    <button class="block w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-lg mt-3 transition-colors duration-200">Add to Cart</button>
+                </div>
+            </div>
+            <button id="loadMoreProducts" class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg mt-6 transition-colors duration-200 shadow-md">
+                Load More Products
+            </button>
+        </section>
+
+        <!-- Resource Loading Demonstration -->
+        <section class="card">
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Resource Loading Test</h3>
+            <p class="text-gray-600 mb-4">
+                This image simulates a resource that might take longer to load.
+                Its loading time would contribute to the overall page load performance.
+            </p>
+            <img id="slowImage" class="slow-image" src="https://placehold.co/800x200/007bff/ffffff?text=Slow+Loading+Image+Placeholder" alt="Slow Loading Image">
+            <p class="text-center text-sm text-gray-500 mt-2" id="imageLoadStatus">Image status: Not loaded</p>
+        </section>
+
+    </main>
+
+    <footer class="w-full bg-gray-800 text-white py-6 mt-8 shadow-inner">
+        <div class="container text-center footer-text">
+            <p>&copy; 2023 Performance Testing Project. All rights reserved.</p>
+            <p>Designed for load simulation and metric collection.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- Client-side JavaScript for interactivity (no actual backend calls here for simplicity) ---
+
+        // Simulate login form submission (client-side only for this static HTML)
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent actual form submission
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginMessage = document.getElementById('loginMessage');
+
+            loginMessage.textContent = 'Attempting login for ' + username + '... (no actual backend call)';
+            loginMessage.className = 'mt-2 text-sm text-blue-600';
+
+            // In a real app, you'd send an AJAX POST request here:
+            // fetch('/api/login', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ username, password })
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //     if (data.success) {
+            //         loginMessage.textContent = 'Login successful!';
+            //         loginMessage.className = 'mt-2 text-sm text-green-600';
+            //     } else {
+            //         loginMessage.textContent = 'Login failed: ' + data.message;
+            //         loginMessage.className = 'mt-2 text-sm text-red-600';
+            //     }
+            // })
+            // .catch(error => {
+            //     loginMessage.textContent = 'Network error during login.';
+            //     loginMessage.className = 'mt-2 text-sm text-red-600';
+            // });
+
+            setTimeout(() => { // Simulate network delay
+                loginMessage.textContent = 'Login "simulated" successfully for ' + username + '.';
+                loginMessage.className = 'mt-2 text-sm text-green-600';
+            }, 1000);
+        });
+
+        // Simulate loading more products
+        document.getElementById('loadMoreProducts').addEventListener('click', function() {
+            const productList = document.getElementById('product-list');
+            this.textContent = 'Loading...';
+            this.disabled = true;
+
+            // In a real app, you'd fetch more products here:
+            // fetch('/api/products?page=2')
+            // .then(response => response.json())
+            // .then(newProducts => {
+            //    newProducts.forEach(product => {
+            //        // Append new product cards
+            //    });
+            // })
+            // .catch(error => console.error('Error loading more products:', error))
+            // .finally(() => {
+            //    this.textContent = 'Load More Products';
+            //    this.disabled = false;
+            // });
+
+            setTimeout(() => { // Simulate API call delay
+                const newProductHtml = `
+                    <div class="bg-white rounded-xl shadow-lg p-4">
+                        <img src="https://placehold.co/300x200/cccccc/333333?text=New+Product+4" alt="Product 4" class="w-full h-32 object-cover rounded-md mb-3">
+                        <h4 class="font-semibold text-lg text-gray-900">Innovative Item A</h4>
+                        <p class="text-gray-600 text-sm mb-2">A fresh addition to our inventory.</p>
+                        <span class="text-blue-600 font-bold">$125.00</span>
+                        <button class="block w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-lg mt-3 transition-colors duration-200">Add to Cart</button>
+                    </div>
+                `;
+                productList.insertAdjacentHTML('beforeend', newProductHtml);
+                this.textContent = 'Load More Products';
+                this.disabled = false;
+            }, 1500); // Simulate longer load for more items
+        });
+
+        // Simulate a slow-loading image using JS
+        document.addEventListener('DOMContentLoaded', function() {
+            const slowImage = document.getElementById('slowImage');
+            const imageLoadStatus = document.getElementById('imageLoadStatus');
+
+            // Simulate a delay before the image 'fully loads' for the browser
+            slowImage.classList.add('loading');
+            imageLoadStatus.textContent = 'Image status: Loading...';
+
+            const simulatedLoadTime = 2000; // Simulate a 2-second load time
+            setTimeout(() => {
+                slowImage.src = "https://placehold.co/800x200/4CAF50/ffffff?text=Image+Loaded!"; // Change to a "loaded" image
+                slowImage.classList.remove('loading');
+                imageLoadStatus.textContent = 'Image status: Loaded!';
+            }, simulatedLoadTime);
+        });
+    </script>
 </body>
 </html>
