@@ -8,7 +8,6 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,7 +15,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
+
+// Import the newly created RequestConfig class
+import RequestConfig;
 
 public class TrafficSimulator {
 
@@ -38,55 +39,12 @@ public class TrafficSimulator {
     private static final Map<String, List<Long>> endpointResponseTimes = new ConcurrentHashMap<>(); // Track response times per endpoint
     private static PrintWriter errorLogger;
 
-    // --- NEW: Request Configuration and Scenario Definition ---
-    public static class RequestConfig {
-        String url;
-        String method; // GET, POST, PUT, DELETE
-        Map<String, String> headers;
-        String requestBody; // For POST/PUT requests
-
-        public RequestConfig(String url, String method) {
-            this.url = url;
-            this.method = method;
-            this.headers = new HashMap<>();
-        }
-
-        public RequestConfig(String url, String method, Map<String, String> headers, String requestBody) {
-            this.url = url;
-            this.method = method;
-            this.headers = headers != null ? headers : new HashMap<>();
-            this.requestBody = requestBody;
-        }
-
-        // Builder pattern for easier configuration
-        public static RequestConfig get(String url) {
-            return new RequestConfig(url, "GET");
-        }
-        public static RequestConfig post(String url, String body) {
-            return new RequestConfig(url, "POST", Map.of("Content-Type", "application/json"), body);
-        }
-        public static RequestConfig put(String url, String body) {
-            return new RequestConfig(url, "PUT", Map.of("Content-Type", "application/json"), body);
-        }
-        public static RequestConfig delete(String url) {
-            return new RequestConfig(url, "DELETE");
-        }
-        public RequestConfig withHeader(String name, String value) {
-            this.headers.put(name, value);
-            return this;
-        }
-        public RequestConfig withBody(String body) {
-            this.requestBody = body;
-            return this;
-        }
-    }
-
     // Define a simple scenario as a list of RequestConfig objects
     // Each simulated user will execute this sequence of requests.
     private static final List<RequestConfig> TEST_SCENARIO = List.of(
             RequestConfig.get("http://localhost:8000/front-page.html"),
             RequestConfig.post("http://localhost:8000/api/login", "{\"username\": \"testuser\", \"password\": \"password123\"}")
-                        .withHeader("Accept", "application/json"),
+                         .withHeader("Accept", "application/json"),
             RequestConfig.get("http://localhost:8000/api/products?category=electronics")
     );
     // You'll need a backend (e.g., Node.js or Spring Boot) to respond to /api/login and /api/products
@@ -95,7 +53,6 @@ public class TrafficSimulator {
     // private static final List<RequestConfig> TEST_SCENARIO = List.of(
     //         RequestConfig.get("http://localhost:8000/front-page.html")
     // );
-    // --- END NEW ---
 
 
     public static void main(String[] args) {
@@ -208,7 +165,6 @@ public class TrafficSimulator {
         }
     }
 
-    // --- NEW: Send Request with Retries ---
     private static final int MAX_RETRIES = 3;
     private static final long INITIAL_RETRY_DELAY_MS = 100; // 100ms
 
@@ -308,7 +264,6 @@ public class TrafficSimulator {
             }
         }
     }
-    // --- END NEW ---
 
 
     /**
