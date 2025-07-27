@@ -1,102 +1,107 @@
-Frontend Load Testing Project
-This project demonstrates how to perform basic load testing on a web front page using Apache JMeter. It's designed to showcase performance testing methodologies, metric tracking, and the use of open-source tools for identifying performance bottlenecks.
+Frontend Performance Load Testing Project
+This project exemplifies a basic approach to performance testing a web frontend using a custom Java-based traffic simulator. It simulates concurrent user traffic to a simple HTML page and collects key performance metrics like response times and throughput.
 
-Project Goal
-The primary goal of this project is to simulate traffic on a simple front page and monitor its performance under load. This will help in understanding:
+Project Structure
+README.md: This file, providing an overview and instructions.
 
-Response Times: How quickly the server responds under various load conditions.
+front-page.html: A simple static HTML file that serves as our "frontend" target for load testing.
 
-Throughput: The number of requests processed per unit of time.
+src/main/java/TrafficSimulator.java: The core Java application responsible for generating HTTP traffic and logging performance metrics.
 
-Error Rates: The percentage of failed requests.
+traffic_simulator_errors.log (generated on run): A log file that will record details of any failed HTTP requests during the simulation.
 
-Resource Utilization: (Indirectly, by observing server behavior during tests)
+Prerequisites
+To run this project, you'll need:
 
-🛠️ Technologies Used
-Apache JMeter: The primary tool for simulating user load and collecting performance metrics.
+Java Development Kit (JDK) 11 or higher: Required to compile and run the TrafficSimulator.java.
+*
 
-HTML/CSS/JavaScript: For the sample front page being tested. (You can integrate your own application's front end here).
+Python 3.x: Used to easily serve the front-page.html locally for testing.
+*
 
-Git/GitHub: For version control and project hosting.
 
- Project Structure
- 
-.
 
-├── README.md
+Licensed by Google
+Setup and Running the Project
+Follow these steps to get the performance test up and running:
 
-├── front-page.html
+1. Serve the Frontend HTML Page
+Your TrafficSimulator needs a web server to send requests to. We'll use Python's built-in simple HTTP server for this.
 
-├── jmeter-test-plan.jmx.md
+Open your terminal or command prompt.
 
-└── .gitignore
+Navigate to the root directory of this project (where front-page.html is located).
 
- Getting Started
-1. Prerequisites
-Before you begin, ensure you have the following installed:
+Run the Python HTTP server:
 
-Java Development Kit (JDK) 8 or higher: JMeter requires Java to run.
+python -m http.server 8000
 
-Download JDK (or use OpenJDK)
+This will make your front-page.html accessible at http://localhost:8000/front-page.html. Keep this terminal window open as long as you want the server to run.
 
-Apache JMeter:
+2. Compile the Java Traffic Simulator
+Next, compile the Java source code.
 
-Download JMeter (Download the binaries, not the source). Extract it to a convenient location (e.g., C:\apache-jmeter-X.Y or ~/apache-jmeter-X.Y).
+Open a new terminal or command prompt (separate from the one running the Python server).
 
-2. Setting up the Front Page
-The front-page.html file in this repository is a basic example.
+Navigate to the root directory of this project.
 
-You can simply open this file in your browser to see it locally.
+Compile the Java file:
 
-For a more realistic test, you might want to serve it using a simple local web server (e.g., Python's http.server, Node.js serve package, or by deploying it to a free hosting service).
+javac src/main/java/TrafficSimulator.java
 
-Example (Python simple HTTP server):
+This command compiles the TrafficSimulator.java file. If successful, it will generate a TrafficSimulator.class file in the src/main/java/ directory.
 
-Navigate to the directory containing front-page.html in your terminal.
+3. Run the Traffic Simulation
+Now you can execute the compiled Java application to simulate traffic.
 
-Run: python -m http.server 8000
+In the same terminal where you compiled the Java file, run the simulator. You can pass command-line arguments to configure the test:
 
-Your front page will then be accessible at http://localhost:8000/front-page.html.
+java -cp src/main/java TrafficSimulator [TARGET_URL] [NUMBER_OF_REQUESTS] [CONCURRENT_USERS] [REQUEST_INTERVAL_MS]
 
-3. Creating the JMeter Test Plan
-Refer to the jmeter-test-plan.jmx.md file for detailed steps on how to create your JMeter test plan (.jmx file).
+[TARGET_URL] (e.g., http://localhost:8000/front-page.html): The URL of the page you want to test.
 
-Quick Steps:
+[NUMBER_OF_REQUESTS] (e.g., 500): The total number of HTTP requests to send.
 
-Open JMeter (run jmeter.bat on Windows or jmeter on Linux/macOS from the bin directory of your JMeter installation).
+[CONCURRENT_USERS] (e.g., 20): The number of concurrent threads (simulated users) sending requests.
 
-Follow the instructions in jmeter-test-plan.jmx.md to build your test plan.
+[REQUEST_INTERVAL_MS] (e.g., 100): The delay in milliseconds between requests initiated by each individual concurrent user thread.
 
-Save your test plan as front_page_load_test.jmx (or a similar name) in the root of this project directory.
+Example Run:
 
-🏃 Running the Load Test
-Once your JMeter test plan (.jmx file) is created and saved:
+java -cp src/main/java TrafficSimulator http://localhost:8000/front-page.html 1000 50 20
 
-Open JMeter.
+This command will send 1000 requests to the specified URL, simulating 50 concurrent users, with each user making a request every 20 milliseconds on average.
 
-Open your test plan: File > Open, then navigate to and select your .jmx file.
+If you run the command without any arguments, the simulator will use its default values:
 
-Run the test: Click the green "Start" button (or Run > Start).
+java -cp src/main/java TrafficSimulator
 
-📊 Analyzing Results
-After the test run, you can view the results directly in JMeter (e.g., using the "View Results Tree" or "Summary Report" listeners).
+(Default: http://localhost:8000/front-page.html, 100 requests, 10 concurrent users, 100ms interval).
 
-Key metrics to analyze:
+Understanding the Performance Metrics
+As the simulation runs, you'll see real-time output in your terminal, showing the status and response time for each request. Once the simulation completes, a summary of key performance metrics will be printed to the console:
 
-Average Response Time: The average time taken to receive a response for a request.
+Total requests attempted: The total number of HTTP requests the simulator tried to send.
 
-Throughput: How many requests per second (or minute) the server can handle.
+Completed requests: The number of requests that finished (either successfully or with an error).
 
-Error %: Percentage of requests that failed. A high error rate indicates issues.
+Successful requests (HTTP 2xx): Requests that received an HTTP status code in the 200 range (e.g., 200 OK). This indicates the server processed the request as expected.
 
-Standard Deviation: Measures the dispersion of response times. A high standard deviation means response times are highly variable.
+Failed requests (non-2xx or exception): Requests that returned a non-2xx status code (e.g., 404 Not Found, 500 Internal Server Error) or resulted in a network/IO exception.
 
-Tips for Analysis:
+Total duration: The total time the entire simulation took to complete in milliseconds.
 
-Look for spikes in response times.
+Average successful response time: The arithmetic mean of response times for all successful requests.
 
-Identify if throughput drops significantly under higher load.
+Median (P50) response time: The 50th percentile response time. Half of your successful requests were faster than this value.
 
-Check for any errors and their types.
+90th Percentile (P90) response time: 90% of your successful requests were faster than this value. This is a crucial metric as it helps identify outliers and gives a better indication of user experience under load than just the average.
 
-Correlate test results with server-side monitoring (if available) to understand CPU, memory, and network usage during the test.
+95th Percentile (P95) response time: 95% of your successful requests were faster than this value, providing an even stricter view of response time consistency.
+
+Overall Throughput: The rate at which requests were completed, measured in requests per second. This indicates the capacity of your frontend/server under the simulated load.
+
+Error Logging
+Any failed requests (non-2xx status codes or exceptions) will be logged to the traffic_simulator_errors.log file in the project's root directory. Reviewing this file can help diagnose issues or identify specific failures during the load test.
+
+This project provides a straightforward, self-contained way to demonstrate your understanding of performance testing principles using a programmatic approach in Java.
